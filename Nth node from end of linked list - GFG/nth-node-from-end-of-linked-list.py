@@ -17,15 +17,26 @@
 #Function to find the data of nth node from the end of a linked list
 def getNthFromLast(head,n):
     #code here
-    a = [None]*1000000
-    i=0
-    while head != None:
-        a[i]=head.data
-        head=head.next
-        i+=1
-    c= ((i-1)-n)+1
-    if a[c]:
-        return a[c]
+    if head is None or n <= 0:
+        return -1
+
+    first = head
+    second = head
+
+    # Move the second pointer N nodes ahead
+    for _ in range(n):
+        if second is None:
+            return -1
+        second = second.next
+
+    # Move both pointers until the second pointer reaches the end
+    while second is not None:
+        first = first.next
+        second = second.next
+
+    # If first pointer is not None, return its value
+    if first is not None:
+        return first.data
     else:
         return -1
 
