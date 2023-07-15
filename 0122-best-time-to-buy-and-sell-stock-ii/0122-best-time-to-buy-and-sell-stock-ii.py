@@ -1,26 +1,24 @@
-def basso(a,ind,buy,dp):
 
-    if ind == len(a):
-        return 0
-    if dp[ind][buy]!=-1:
-        return dp[ind][buy]     
-    if buy:
-        profit = max(basso(a,ind+1,0,dp)-a[ind],basso(a,ind+1,1,dp))
-    else:
-        profit = max(basso(a,ind+1,1,dp)+a[ind],basso(a,ind+1,0,dp))
-    dp[ind][buy] = profit
-    
-    return dp[ind][buy]
     
 class Solution(object):
     
     
-    def maxProfit(self, prices):
+    def maxProfit(self, a):
         """
         :type prices: List[int]
         :rtype: int
         """
-        dp = [[-1 for j in range(2)] for i in range(len(prices))]
+        n = len(a)
+        dp = [[0 for j in range(2)] for i in range(n+1)]
 
-        return basso(prices,0,1,dp)
+        dp[n][0]=dp[n][1]= 0
+    
+        for ind in range(n-1,-1,-1):
+            for buy in range(2):
+                if buy:
+                    profit = max(dp[ind+1][0]-a[ind],dp[ind+1][1])
+                else:
+                    profit = max(dp[ind+1][1]+a[ind],dp[ind+1][0])
+                dp[ind][buy] = profit
         
+        return dp[0][1]
