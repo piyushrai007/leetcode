@@ -5,19 +5,17 @@ from typing import List
 class Solution:
     def stockBuyAndSell(self, n : int, a : List[int]) -> int:
         # code here
-        dp = [[0 for j in range(2)] for i in range(len(prices)+1)]
-
-        dp[n][0]=dp[n][1]= 0
+        dp =[0]*2
+        curr = [0]*2
+        n = len(a)
+        dp[0]=dp[1]= 0
     
         for ind in range(n-1,-1,-1):
-            for buy in range(2):
-                if buy:
-                    profit = max(dp[ind+1][0]-a[ind],dp[ind+1][1])
-                else:
-                    profit = max(dp[ind+1][1]+a[ind],dp[ind+1][0])
-                dp[ind][buy] = profit
-        
-        return dp[0][1]
+            
+                curr[1]= max(dp[0]-a[ind],dp[1])
+                curr[0]= max(dp[1]+a[ind],dp[0])
+                dp = curr
+        return dp[1]
 
 
 
