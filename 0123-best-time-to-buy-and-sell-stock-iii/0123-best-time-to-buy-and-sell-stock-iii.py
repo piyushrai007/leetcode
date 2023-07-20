@@ -1,3 +1,4 @@
+import numpy as np
 def memo(a,ind,buy,cap,dp):
     if cap == 0:
         return 0
@@ -16,5 +17,10 @@ class Solution(object):
         :type prices: List[int]
         :rtype: int
         """
-        t = [[[-1 for _ in range(3)] for _ in range(2)] for _ in range(len(prices))]
-        return memo(prices,0,1,2,t)
+        size_dim1 = len(prices)
+        size_dim2 = 2
+        size_dim3 = 3
+
+        t = np.full((size_dim1, size_dim2, size_dim3), -1)
+
+        return int(memo(prices,0,1,2,t))
