@@ -1,26 +1,18 @@
-import numpy as np
-def memo(a,ind,buy,cap,dp):
-    if cap == 0:
-        return 0
-    if ind == len(a):
-        return 0
-    if dp[ind][buy][cap]!=-1:
-        return dp[ind][buy][cap]
-    if buy:
-        dp[ind][buy][cap] = max(memo(a,ind+1,0,cap,dp)-a[ind],memo(a,ind+1,1,cap,dp))
-    else:
-        dp[ind][buy][cap]= max(memo(a,ind+1,1,cap-1,dp)+a[ind],memo(a,ind+1,0,cap,dp))
-    return dp[ind][buy][cap]
 class Solution(object):
-    def maxProfit(self, prices):
+    def maxProfit(self,a):
         """
         :type prices: List[int]
         :rtype: int
         """
-        size_dim1 = len(prices)
-        size_dim2 = 2
-        size_dim3 = 3
-
-        t = np.full((size_dim1, size_dim2, size_dim3), -1)
-
-        return int(memo(prices,0,1,2,t))
+        n=len(a)
+        after = [[0 for _ in range(3)] for _ in range(2)]
+        cur = [[0 for _ in range(3)] for _ in range(2)]
+        for ind in range(n-1,-1,-1):
+            for buy in range(2):
+                for cap in range (1,3):
+                    if buy:
+                        cur[buy][cap] = max(after[0][cap]-a[ind],after[1][cap])
+                    else:
+                        cur[buy][cap] = max(after[1][cap-1]+a[ind],after[0][cap])
+            after = cur
+        return after[1][2] 
