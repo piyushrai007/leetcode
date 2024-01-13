@@ -12,11 +12,8 @@ class Solution(object):
         """
         if root ==  None:
             return root
-        if root.left:
-            root.left=self.invertTree(root.left)
-        if root.right:
-            root.right = self.invertTree(root.right)
+        
         temp = root.left
-        root.left=root.right
-        root.right=temp
+        root.left=self.invertTree(root.right)
+        root.right=self.invertTree(temp)
         return root
