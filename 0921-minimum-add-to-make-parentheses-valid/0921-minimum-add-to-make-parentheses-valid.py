@@ -6,8 +6,8 @@ class Solution(object):
         """
         a = 0
         b = 0
-        for char in s:
-            if char == '(':
+        for i in s:
+            if i == '(':
                 a += 1
             else:
                 if a > 0:
