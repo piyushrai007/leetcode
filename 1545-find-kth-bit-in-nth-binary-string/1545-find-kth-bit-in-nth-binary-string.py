@@ -1,24 +1,19 @@
 class Solution:
-    def doing(self,x):
-        z=""
-        for i in x:
-            if i=="1":
-                z+="0"
-            else:
-                z+="1"
-        z=z[::-1]
-        return z
-    
-    def sol(self,n):
-        if n == 1:
-            return "0"
-        else:
-            x= self.sol(n-1)
-            s = x+"1"+self.doing(x)
-            return s
-        
-    
     def findKthBit(self, n: int, k: int) -> str:
-        m = self.sol(n)
-        print(m)
-        return m[k-1]
+        invert_count = 0
+        len = (1 << n) - 1  # Length of Sn is 2^n - 1
+
+        while k > 1:
+            # If k is in the middle, return based on inversion count
+            if k == len // 2 + 1:
+                return "1" if invert_count % 2 == 0 else "0"
+
+            # If k is in the second half, invert and mirror
+            if k > len // 2:
+                k = len + 1 - k  # Mirror position
+                invert_count += 1  # Increment inversion count
+
+            len //= 2  # Reduce length for next iteration
+
+        # For the first position, return based on inversion count
+        return "0" if invert_count % 2 == 0 else "1"
