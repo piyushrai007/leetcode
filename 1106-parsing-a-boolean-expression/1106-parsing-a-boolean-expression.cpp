@@ -1,29 +1,44 @@
 class Solution {
 public:
     bool parseBoolExpr(string expression) {
-        // Repeatedly simplify the expression by evaluating subexpressions
-        while (expression.length() > 1) {
-            int start = expression.find_last_of("!&|");
-            int end = expression.find(')', start);
-            string subExpr = expression.substr(start, end - start + 1);
-            char result = evaluateSubExpr(subExpr);
-            expression.replace(start, end - start + 1, 1,
-                               result);  // Replace with evaluated result
+        stack<char> st;
+
+        // Traverse through the expression
+        for (char currChar : expression) {
+            if (currChar == ',' || currChar == '(')
+                continue;  // Skip commas and open parentheses
+
+            // Push operators and boolean values to the stack
+            if (currChar == 't' || currChar == 'f' || currChar == '!' ||
+                currChar == '&' || currChar == '|') {
+                st.push(currChar);
+            }
+            // Handle closing parentheses and evaluate the subexpression
+            else if (currChar == ')') {
+                bool hasTrue = false, hasFalse = false;
+
+                // Process the values inside the parentheses
+                while (st.top() != '!' && st.top() != '&' && st.top() != '|') {
+                    char topValue = st.top();
+                    st.pop();
+                    if (topValue == 't') hasTrue = true;
+                    if (topValue == 'f') hasFalse = true;
+                }
+
+                // Pop the operator and evaluate the subexpression
+                char op = st.top();
+                st.pop();
+                if (op == '!') {
+                    st.push(hasTrue ? 'f' : 't');
+                } else if (op == '&') {
+                    st.push(hasFalse ? 'f' : 't');
+                } else {
+                    st.push(hasTrue ? 't' : 'f');
+                }
+            }
         }
-        return expression[0] == 't';
-    }
 
-private:
-    char evaluateSubExpr(const string& subExpr) {
-        // Extract the operator and the enclosed values
-        char op = subExpr[0];
-        string values = subExpr.substr(2, subExpr.length() - 3);
-
-        // Apply logical operations based on the operator
-        if (op == '!') return values[0] == 't' ? 'f' : 't';
-        if (op == '&') return values.find('f') != string::npos ? 'f' : 't';
-        if (op == '|') return values.find('t') != string::npos ? 't' : 'f';
-
-        return 'f';  // This point should never be reached
+        // The final result is at the top of the stack
+        return st.top() == 't';
     }
 };
